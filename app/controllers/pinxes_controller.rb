@@ -1,6 +1,7 @@
 class PinxesController < ApplicationController
-  before_action :set_pinx, only: [:show, :edit, :update, :destroy]
-
+before_action :authenticate_user!, except: [:index, :show]
+before_action :set_pinx, only: [:show, :edit, :update, :destroy]
+before_action :correct_user, only: [:edit, :update, :destroy]
   # GET /pinxes
   # GET /pinxes.json
   def index
@@ -14,7 +15,8 @@ class PinxesController < ApplicationController
 
   # GET /pinxes/new
   def new
-    @pinx = Pinx.new
+    @pinx = current_user.pinxes.build
+
   end
 
   # GET /pinxes/1/edit
@@ -24,7 +26,7 @@ class PinxesController < ApplicationController
   # POST /pinxes
   # POST /pinxes.json
   def create
-    @pinx = Pinx.new(pinx_params)
+    @pinx = current_user.pinxes.build(pinx_params)
 
     respond_to do |format|
       if @pinx.save
