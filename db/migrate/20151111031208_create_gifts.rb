@@ -1,6 +1,6 @@
-class CreatePinxes < ActiveRecord::Migration
+class CreateGifts < ActiveRecord::Migration
   def change
-    create_table :pinxes do |t|
+    create_table :gifts do |t|
       t.string :description
 
       t.timestamps null: false
