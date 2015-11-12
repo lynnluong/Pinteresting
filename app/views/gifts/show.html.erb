@@ -4,6 +4,8 @@
   <strong>Description:</strong>
   <%= @gift.description %>
 </p>
-
+<% if gift.user == current_user %>
 <%= link_to 'Edit', edit_gift_path(@gift) %> |
+<% end %>
 <%= link_to 'Back', gifts_path %>
+

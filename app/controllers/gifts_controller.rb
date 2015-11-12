@@ -1,5 +1,7 @@
 class GiftsController < ApplicationController
   before_action :set_gift, only: [:show, :edit, :update, :destroy]
+  before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   # GET /gifts
   # GET /gifts.json
@@ -14,7 +16,7 @@ class GiftsController < ApplicationController
 
   # GET /gifts/new
   def new
-    @gift = Gift.new
+    @gift = current_user.gifts.build
   end
 
   # GET /gifts/1/edit
@@ -24,7 +26,7 @@ class GiftsController < ApplicationController
   # POST /gifts
   # POST /gifts.json
   def create
-    @gift = Gift.new(gift_params)
+    @gift = current_user.gifts.build(gift_params)
 
     respond_to do |format|
       if @gift.save
@@ -64,11 +66,16 @@ class GiftsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_gift
-      @gift = Gift.find(params[:id])
+      @gift = Gift.find_by(params[:id])
+    end
+
+    def correct_user
+        @gift = current_user.gifts.find_by(id: params[:id])
+        redirect_to gifts_path, notice: "You can't edit this!" if @gift.nil?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gift_params
-      params.require(:gift).permit(:description)
+      params.require(:gift).permit(:description, :image)
     end
 end

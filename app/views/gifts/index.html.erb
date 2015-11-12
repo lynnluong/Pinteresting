@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Gifts</th>
+      <th>Who</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -14,14 +15,18 @@
     <% @gifts.each do |gift| %>
       <tr>
         <td><%= gift.description %></td>
+        <td><%= gift.user.email if gift.user %></td>
         <td><%= link_to 'Show ', gift %></td>
-        <td><%= link_to 'Edit ', edit_gift_path(gift) %></td>
-        <td><%= link_to 'Destroy ', gift, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% if gift.user == current_user %>
+          <td><%= link_to 'Edit ', edit_gift_path(gift) %></td>
+          <td><%= link_to 'Destroy ', gift, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% end %>      
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
+<% if user_signed_in? %>
 <%= link_to 'New Gift', new_gift_path %>
+<% end %>
